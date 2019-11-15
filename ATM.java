@@ -6,11 +6,16 @@ public class ATM {
     private Scanner in; 
     private BankAccount activeAccount; 
 
-    //Gives value to switch statement on l. 35
+    //Gives value to switch statement on line 35
     public static final int VIEW = 1;
     public static final int DEPOSIT = 2;
     public static final int WITHDRAW = 3;
     public static final int LOGOUT = 4;
+
+    //Gives value to deposit / withdraw statements in BankAccount.java
+    public static final int INVALID = 0;
+    public static final int INSUFFICIENT = 1;
+    public static final int SUCCESS = 2;
 
     public ATM() {
         in = new Scanner(System.in); //Activates scanner
@@ -78,19 +83,30 @@ public class ATM {
     public void deposit() { 
         System.out.print("\nEnter amount: ");
         double amount = in.nextDouble();
-        
-        activeAccount.deposit(amount);
-        System.out.println();
+            
+        int status = activeAccount.deposit(amount);
+        if (status == ATM.INVALID) {
+            System.out.println("\nDeposit rejected. Amount must be greater than $0.00.\n");
+        } else if (status == ATM.SUCCESS) {
+            System.out.println("\nDeposit accepted.\n");
+        }
     }
     
     public void withdraw() { 
         System.out.print("\nEnter amount: ");
         double amount = in.nextDouble();
-        
-        activeAccount.withdraw(amount);
-        System.out.println();
+            
+        int status = activeAccount.withdraw(amount);
+        if (status == ATM.INVALID) {
+            System.out.println("\nWithdrawal rejected. Amount must be greater than $0.00.\n");
+        } else if (status == ATM.INSUFFICIENT) {
+            System.out.println("\nWithdrawal rejected. Insufficient funds.\n");
+        } else if (status == ATM.SUCCESS) {
+            System.out.println("\nWithdrawal accepted.\n");
+        }
     }
 
+    
     public void shutdown() {
         if (in != null) {
             in.close();
